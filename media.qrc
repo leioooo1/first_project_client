@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/src">
+        <file>mediaSrc/close.png</file>
+        <file>mediaSrc/maxmize.png</file>
+        <file>mediaSrc/minnize.png</file>
+        <file>mediaSrc/更新.png</file>
+        <file>mediaSrc/蚂蚁logo.png</file>
+    </qresource>
+</RCC>

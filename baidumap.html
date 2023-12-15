@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <title>CanvasLayer</title>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?type=webgl&v=3.0&ak=tG1sfwxySAhSggyEFzXGzSubo5Svd5SN"></script>
+    <style type="text/css">
+    body, html,#container {width: 100%;height: 100%;overflow: hidden;margin:0;font-family:"微软雅黑";}
+    </style>
+    </head>
+    <body>
+        <div id="container"></div>
+    </body>
+    </html>
+    <script src="qwebchannel.js"></script>
+    <script type="text/javascript">
+       var map = new BMapGL.Map("container"); 
+       map.centerAndZoom(new BMapGL.Point(108.3964,34.9093), 6); 
+       map.enableScrollWheelZoom(true); 
+      
+    
+    
+        //创建Qt界面对象
+        new QWebChannel(qt.webChannelTransport, function(c) {
+            mw = c.objects.window;
+            mw.onLoadMarker();
+        });
+    
+        
+
+        //鼠标在地图点击，将点击的坐标发送到界面接口
+        map.addEventListener("click",function(e){
+            mw.onRecvPostion(e.latlng.lng,e.latlng.lat);
+            
+        });
+
+
+        //界面设置标点到地图中
+        function SetPoint(lng,lat,n){//lng与lat为设备表中经纬度拆分，n为表中序号
+            var marker = new BMapGL.Marker(new BMapGL.Point(lng, lat));
+                // 在点标记上添加数字（根据需求设置对应信息）
+            var label = new BMapGL.Label(n, {
+                //调整数字跟点标记的位置关系
+            offset: new BMapGL.Size(-5, -25),
+            });
+            label.setStyle({
+            background: "none",
+            color: "#fff",
+            border: "none", 
+            });//设置数字格式
+            marker.addEventListener("dblclick",function(){
+                mw.markerNumber(n);//qt拿到点位的序号，去sql里查询，调用曲线图接口显示改点设备曲线图。
+            });//设置点位监听函数，调用qt函数
+            marker.setLabel(label); 
+            map.addOverlay(marker);
+        }
+         
+        function removeMarker(){
+            map.clearOverlays();//清楚标记，reload时调用以清楚旧标记。
+        }
+
+
+    </script>
+
